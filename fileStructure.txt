@@ -1,0 +1,9 @@
+/
+├── index.html         (Home Page)
+├── details.html       (Details Page)
+├── rsvp.html          (RSVP Page)
+├── story.html         (Our Story Page)
+├── registry.html      (Registry Page)
+├── style.css          (Stylesheets)
+├── script.js          (Decryption & Shared Logic)
+└── encrypt-tool.html  (Local Tool - DO NOT COMMIT or push to GitHub if secret)
