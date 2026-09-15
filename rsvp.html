@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wedding - RSVP</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="pass-bar">
+    <label for="site-password">Enter Password to Unlock RSVP Target: </label>
+    <input type="password" id="site-password" placeholder="Password">
+    <button onclick="unlockPage()">Unlock</button>
+    <span id="pass-status"></span>
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1 class="font-header">RSVP</h1>
+
+      <!-- Encrypted Form Endpoint: Form action URL is encrypted to keep email endpoint hidden -->
+      <!-- DUMMY TEXT: Encrypt your Formspree/Web3Forms endpoint URL (e.g. https://formspree.io/f/your_id) -->
+      <form id="rsvp-form" method="POST" data-encrypted-action='{"iv":"DUMMY_IV_HERE","data":"DUMMY_DATA_HERE"}'>
+        
+        <p>
+          <label for="guest-name">Your Name(s):</label><br>
+          <input type="text" id="guest-name" name="name" required style="width: 100%; max-width: 300px;">
+        </p>
+
+        <p>
+          <label>Will you attend?</label><br>
+          <input type="radio" id="attending-yes" name="attendance" value="Yes" checked>
+          <label for="attending-yes">Joyfully Accept</label><br>
+          
+          <input type="radio" id="attending-no" name="attendance" value="No">
+          <label for="attending-no">Regretfully Decline</label>
+        </p>
+
+        <p>
+          <label for="notes">Dietary Restrictions / Notes:</label><br>
+          <textarea id="notes" name="notes" rows="4" style="width: 100%; max-width: 300px;"></textarea>
+        </p>
+
+        <button type="submit" style="padding: 8px 16px; cursor: pointer;">Send RSVP</button>
+      </form>
+    </main>
+
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="details.html">Details</a></li>
+        <li><a href="rsvp.html">RSVP</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="registry.html">Registry</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <footer>
+    <p>Static Footer Text: Thank you for visiting our wedding site!</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
