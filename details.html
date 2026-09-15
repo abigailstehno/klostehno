@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wedding - Details</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="pass-bar">
+    <label for="site-password">Enter Password to Unlock Details: </label>
+    <input type="password" id="site-password" placeholder="Password">
+    <button onclick="unlockPage()">Unlock</button>
+    <span id="pass-status"></span>
+  </div>
+
+  <div class="container">
+    <main class="main-content">
+      <h1 class="font-header">Event Details</h1>
+
+      <!-- Encrypted Venue Section -->
+      <section>
+        <h2>Venue Info</h2>
+        <!-- DUMMY TEXT: Paste encrypted venue JSON string here -->
+        <p data-encrypted='{"iv":"DUMMY_IV_HERE","data":"DUMMY_DATA_HERE"}'>[Protected Venue Information]</p>
+      </section>
+
+      <!-- Unencrypted Section -->
+      <section>
+        <h2>General Info</h2>
+        <p>Dress code: Casual retro. Parking is available nearby.</p>
+      </section>
+
+      <h2>Pictures</h2>
+      <!-- 3 Unencrypted Pictures -->
+      <img src="detail1.jpg" alt="Detail 1">
+      <img src="detail2.jpg" alt="Detail 2">
+      <img src="detail3.jpg" alt="Detail 3">
+
+      <!-- 1 Encrypted Picture (Requires Base64 Encrypted String) -->
+      <h3>Encrypted Map Image</h3>
+      <!-- DUMMY TEXT: Replace JSON payload with output from encrypt-tool.html for Base64 image -->
+      <img data-encrypted-img='{"iv":"DUMMY_IV_HERE","data":"DUMMY_DATA_HERE"}' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" alt="Encrypted Venue Map">
+    </main>
+
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="details.html">Details</a></li>
+        <li><a href="rsvp.html">RSVP</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="registry.html">Registry</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <footer>
+    <p>Static Footer Text: Thank you for visiting our wedding site!</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
