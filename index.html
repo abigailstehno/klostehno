@@ -6,33 +6,22 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Password Unlock Bar -->
   <div id="pass-bar">
     <label for="site-password">Enter Password to Unlock Details: </label>
     <input type="password" id="site-password" placeholder="Password">
     <button onclick="unlockPage()">Unlock</button>
     <span id="pass-status"></span>
   </div>
-
   <div class="container">
     <main class="main-content">
       <h1 class="font-header">Welcome to Our Wedding Page</h1>
-      
-      <!-- DUMMY TEXT: Replace payload below with JSON string from encrypt-tool.html -->
       <p class="font-subtext">Date: <span data-encrypted='{"iv":"DUMMY_IV_HERE","data":"DUMMY_DATA_HERE"}'>[Protected Date]</span></p>
-      
-      <!-- DUMMY TEXT: Replace payload below with JSON string from encrypt-tool.html -->
       <p class="font-subtext">Location: <span data-encrypted='{"iv":"DUMMY_IV_HERE","data":"DUMMY_DATA_HERE"}'>[Protected Location]</span></p>
-
       <h2>Gallery</h2>
-      <!-- Replace pic1.jpg, pic2.jpg, pic3.jpg in your project folder -->
-      <img src="pic1.jpg" alt="Picture 1">
-      <img src="pic2.jpg" alt="Picture 2">
-      <img src="pic3.jpg" alt="Picture 3">
+      <img src="Pictures/Examples/pic1.jpg" alt="Picture 1">
+      <img src="Pictures/Examples/pic2.jpg" alt="Picture 2">
+      <img src="Pictures/Examples/pic3.jpg" alt="Picture 3">
     </main>
-
-    <!-- Sidebar Navigation (Present on every page) -->
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Home</a></li>
@@ -43,12 +32,7 @@
       </ul>
     </nav>
   </div>
-
-  <!-- Shared Footer -->
-  <footer>
-    <p>Static Footer Text: Thank you for visiting our wedding site!</p>
-  </footer>
-
+  <footer><p>Static Footer Text: Thank you for visiting our wedding site!</p></footer>
   <script src="script.js"></script>
 </body>
 </html>
