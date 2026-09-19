@@ -1,113 +1,71 @@
-// Decryption and Shared Navigation Logic
+const SALT = "WeddingSalt2026";
+const ROTATION_MS = 1000;
 
-// Key Derivation Helper using PBKDF2
-async function getCryptoKey(password, salt) {
+async function getCryptoKey(password, salt = SALT) {
   const enc = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
-  );
-  return crypto.subtle.deriveKey(
-    {
-      name: "PBKDF2",
-      salt: enc.encode(salt),
-      iterations: 100000,
-      hash: "SHA-256"
-    },
-    keyMaterial,
-    { name: "AES-GCM", length: 256 },
-    false,
-    ["decrypt"]
-  );
+  const material = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt: enc.encode(salt), iterations: 100000, hash: "SHA-256" }, material, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
 }
-
-// AES-256-GCM Decryption Function
-async function decryptData(encryptedJsonObject, password) {
+function bytes(value) {
+  const binary = atob(value.replace(/\s/g, ""));
+  return Uint8Array.from(binary, c => c.charCodeAt(0));
+}
+async function decryptData(payload, password) {
   try {
-    const salt = "WeddingSalt2026"; // Fixed Salt for Key Derivation
-    const key = await getCryptoKey(password, salt);
-    
-    const iv = new Uint8Array(atob(encryptedJsonObject.iv).split("").map(c => c.charCodeAt(0)));
-    const cipherText = new Uint8Array(atob(encryptedJsonObject.data).split("").map(c => c.charCodeAt(0)));
-
-    const decryptedContent = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv: iv },
-      key,
-      cipherText
-    );
-
-    const dec = new TextDecoder();
-    return dec.decode(decryptedContent);
-  } catch (e) {
-    return null; // Return null on wrong password/failure
-  }
+    if (!payload || !payload.iv || !payload.data) return null;
+    const key = await getCryptoKey(password, payload.salt || SALT);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(payload.iv) }, key, bytes(payload.data));
+    return new TextDecoder().decode(plain);
+  } catch (_) { return null; }
 }
-
-// Master Function to Trigger Decryption Across the Page
+function source(value) {
+  const text = value.trim();
+  if (!text) return null;
+  return text.startsWith("data:image/") ? text : `data:image/jpeg;base64,${text.replace(/\s/g, "")}`;
+}
+function payloadFrom(script) {
+  try {
+    const text = script.textContent.trim();
+    return text.includes("PASTE_IV_BASE64_HERE") ? null : JSON.parse(text);
+  } catch (_) { return null; }
+}
+async function decryptStack(script, password) {
+  const text = await decryptData(payloadFrom(script), password);
+  if (text === null) return false;
+  let values;
+  try { const parsed = JSON.parse(text); values = Array.isArray(parsed) ? parsed : [text]; }
+  catch (_) { values = text.split(/\r?\n/); }
+  const images = values.map(source).filter(Boolean);
+  if (!images.length) return false;
+  const row = script.parentElement;
+  const mode = row.dataset.repeat === "fill" ? "fill" : "fixed";
+  const wanted = mode === "fill" ? Math.max(1, Math.ceil(row.clientWidth / 192)) : Math.max(1, Number(row.dataset.count) || images.length);
+  row.querySelectorAll(".memory-tile").forEach(tile => tile.remove());
+  const tiles = [];
+  for (let i = 0; i < wanted; i++) {
+    const tile = document.createElement("div"); tile.className = "memory-tile";
+    const img = document.createElement("img"); img.alt = "Wedding memory"; tile.appendChild(img); row.appendChild(tile); tiles.push(img);
+  }
+  let frame = 0;
+  const paint = () => tiles.forEach((img, i) => { img.src = images[(frame + i) % images.length]; });
+  paint();
+  if (images.length > 1) setInterval(() => { frame = (frame + 1) % images.length; paint(); }, ROTATION_MS);
+  if (mode === "fill") window.addEventListener("resize", () => {
+    const needed = Math.max(1, Math.ceil(row.clientWidth / 192));
+    if (needed !== tiles.length) location.reload();
+  }, { once: true });
+  return true;
+}
 async function unlockPage() {
-  const passwordInput = document.getElementById('site-password').value;
-  const statusEl = document.getElementById('pass-status');
-
-  // 1. Decrypt Text Nodes
-  const encryptedTextNodes = document.querySelectorAll('[data-encrypted]');
-  let successCount = 0;
-
-  for (let el of encryptedTextNodes) {
-    const rawData = JSON.parse(el.getAttribute('data-encrypted'));
-    const decryptedText = await decryptData(rawData, passwordInput);
-    
-    if (decryptedText !== null) {
-      el.textContent = decryptedText;
-      successCount++;
-    }
-  }
-
-  // 2. Decrypt Encrypted Images
-  const encryptedImgNodes = document.querySelectorAll('[data-encrypted-img]');
-  for (let img of encryptedImgNodes) {
-    const rawData = JSON.parse(img.getAttribute('data-encrypted-img'));
-    const decryptedBase64 = await decryptData(rawData, passwordInput);
-    
-    if (decryptedBase64 !== null) {
-      img.src = decryptedBase64;
-    }
-  }
-
-  // 3. Decrypt Form Actions / Mailto / Hotlinks
-  const encryptedLinks = document.querySelectorAll('[data-encrypted-href]');
-  for (let a of encryptedLinks) {
-    const rawData = JSON.parse(a.getAttribute('data-encrypted-href'));
-    const decryptedUrl = await decryptData(rawData, passwordInput);
-    
-    if (decryptedUrl !== null) {
-      a.href = decryptedUrl;
-    }
-  }
-
-  const encryptedForms = document.querySelectorAll('[data-encrypted-action]');
-  for (let form of encryptedForms) {
-    const rawData = JSON.parse(form.getAttribute('data-encrypted-action'));
-    const decryptedAction = await decryptData(rawData, passwordInput);
-    
-    if (decryptedAction !== null) {
-      form.action = decryptedAction;
-    }
-  }
-
-  if (successCount > 0 || encryptedTextNodes.length === 0) {
-    statusEl.textContent = "Unlocked!";
-    statusEl.style.color = "green";
-    sessionStorage.setItem('weddingPass', passwordInput); // Retain password during session
-  } else {
-    statusEl.textContent = "Incorrect password.";
-    statusEl.style.color = "red";
-  }
+  const password = document.getElementById("site-password").value;
+  const status = document.getElementById("pass-status");
+  if (!password) { status.textContent = " Enter a password."; status.style.color = "red"; return; }
+  let success = 0;
+  for (const node of document.querySelectorAll("[data-encrypted]")) { const value = await decryptData(JSON.parse(node.dataset.encrypted), password); if (value !== null) { node.textContent = value; success++; } }
+  for (const node of document.querySelectorAll("[data-encrypted-img]")) { const value = await decryptData(JSON.parse(node.dataset.encryptedImg), password); if (value !== null) { node.src = source(value); success++; } }
+  for (const stack of document.querySelectorAll(".encrypted-image-stack")) if (await decryptStack(stack, password)) success++;
+  status.textContent = success ? " Unlocked!" : " Incorrect password or invalid payload.";
+  status.style.color = success ? "green" : "red";
+  if (success) sessionStorage.setItem("weddingPass", password);
 }
-
-// Auto-unlock if password is saved in session
-window.addEventListener('DOMContentLoaded', () => {
-  const savedPass = sessionStorage.getItem('weddingPass');
-  if (savedPass) {
-    document.getElementById('site-password').value = savedPass;
-    unlockPage();
-  }
-});
+window.addEventListener("DOMContentLoaded", () => { const pass = sessionStorage.getItem("weddingPass"); if (pass) { document.getElementById("site-password").value = pass; unlockPage(); } });

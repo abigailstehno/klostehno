@@ -2,28 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wedding - Our Story</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <div id="pass-bar">
     <label for="site-password">Enter Password to Unlock: </label>
     <input type="password" id="site-password" placeholder="Password">
-    <button onclick="unlockPage()">Unlock</button>
-    <span id="pass-status"></span>
+    <button type="button" onclick="unlockPage()">Unlock</button>
+    <span id="pass-status" role="status"></span>
   </div>
 
   <div class="container">
     <main class="main-content">
       <h1 class="font-header">Our Story</h1>
-      
       <p class="font-subtext">DUMMY TEXT: How we met, proposal story, and memories.</p>
-
       <h2>Memories</h2>
-      <!-- Replace story1.jpg and story2.jpg in your repo -->
-      <img src="story1.jpg" alt="Story Image 1">
-      <img src="story2.jpg" alt="Story Image 2">
+
+      <!--
+        Add one encrypted stack per row. A stack decrypts to one image per line.
+        data-repeat="fixed" means exactly data-count images, wrapping when needed.
+        data-repeat="fill" repeats the stack until the row reaches its edge.
+        data-count is used only by fixed rows.
+      -->
+      <section class="image-row" data-repeat="fixed" data-count="6" aria-label="Memory row 1">
+        <script type="application/json" class="encrypted-image-stack">
+          {"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}
+        </script>
+      </section>
+
+      <section class="image-row" data-repeat="fill" aria-label="Memory row 2">
+        <script type="application/json" class="encrypted-image-stack">
+          {"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}
+        </script>
+      </section>
     </main>
 
     <nav class="sidebar">
@@ -37,10 +50,7 @@
     </nav>
   </div>
 
-  <footer>
-    <p>Static Footer Text: Thank you for visiting our wedding site!</p>
-  </footer>
-
+  <footer><p>Static Footer Text: Thank you for visiting our wedding site!</p></footer>
   <script src="script.js"></script>
 </body>
 </html>
