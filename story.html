@@ -7,49 +7,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="pass-bar">
-    <label for="site-password">Enter Password to Unlock: </label>
-    <input type="password" id="site-password" placeholder="Password">
-    <button type="button" onclick="unlockPage()">Unlock</button>
-    <span id="pass-status" role="status"></span>
-  </div>
-
+  <div id="pass-bar"><label for="site-password">Enter Password to Unlock: </label><input type="password" id="site-password" placeholder="Password"><button type="button" onclick="unlockPage()">Unlock</button><span id="pass-status" role="status"></span></div>
   <div class="container">
     <main class="main-content">
       <h1 class="font-header">Our Story</h1>
       <p class="font-subtext">DUMMY TEXT: How we met, proposal story, and memories.</p>
       <h2>Memories</h2>
-
-      <!--
-        Add one encrypted stack per row. A stack decrypts to one image per line.
-        data-repeat="fixed" means exactly data-count images, wrapping when needed.
-        data-repeat="fill" repeats the stack until the row reaches its edge.
-        data-count is used only by fixed rows.
-      -->
-      <section class="image-row" data-repeat="fixed" data-count="6" aria-label="Memory row 1">
-        <script type="application/json" class="encrypted-image-stack">
-          {"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}
-        </script>
-      </section>
-
-      <section class="image-row" data-repeat="fill" aria-label="Memory row 2">
-        <script type="application/json" class="encrypted-image-stack">
-          {"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}
-        </script>
-      </section>
+      <section class="image-row" data-repeat="fixed" data-count="6" aria-label="Memory row 1"><script type="application/json" class="encrypted-image-stack">{"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}</script></section>
+      <section class="image-row" data-repeat="fill" aria-label="Memory row 2"><script type="application/json" class="encrypted-image-stack">{"iv":"PASTE_IV_BASE64_HERE","data":"PASTE_DATA_BASE64_HERE"}</script></section>
     </main>
-
-    <nav class="sidebar">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="details.html">Details</a></li>
-        <li><a href="rsvp.html">RSVP</a></li>
-        <li><a href="story.html">Our Story</a></li>
-        <li><a href="registry.html">Registry</a></li>
-      </ul>
-    </nav>
+    <nav class="sidebar"><ul><li><a href="index.html">Home</a></li><li><a href="details.html">Details</a></li><li><a href="rsvp.html">RSVP</a></li><li><a href="story.html">Our Story</a></li><li><a href="registry.html">Registry</a></li></ul></nav>
   </div>
-
   <footer><p>Static Footer Text: Thank you for visiting our wedding site!</p></footer>
   <script src="script.js"></script>
 </body>
